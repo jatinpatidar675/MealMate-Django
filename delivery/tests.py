@@ -204,6 +204,10 @@ class AddToCartMessageTests(TestCase):
 
 		self.assertEqual(seeded_restaurants.count(), 5)
 		self.assertFalse(Item.objects.filter(vegeterian=False).exists())
+		self.assertGreater(
+			max(len(item.name) for item in Item.objects.filter(restaurant__in=seeded_restaurants)),
+			20,
+		)
 		for restaurant in seeded_restaurants:
 			items = restaurant.items.all()
 			self.assertEqual(items.count(), 6)

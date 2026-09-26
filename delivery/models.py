@@ -16,7 +16,7 @@ class Restaurant(models.Model):
     
 class Item(models.Model):
     restaurant = models.ForeignKey(Restaurant, on_delete = models.CASCADE, related_name = "items")
-    name = models.CharField(max_length = 20)
+    name = models.CharField(max_length = 100)
     description = models.CharField(max_length = 200)
     price = models.FloatField()
     vegeterian = models.BooleanField(default=False)
