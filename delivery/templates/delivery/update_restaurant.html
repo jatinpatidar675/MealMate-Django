@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit {{ restaurant.name }} | Meal Mate</title>
+    {% include 'delivery/_theme_assets.html' %}
+</head>
+<body>
+    <main class="form-page">
+        {% include 'delivery/_brand_lockup.html' %}
+        <section class="page-heading">
+            <p class="eyebrow">Workspace / Listings</p>
+            <h1>Edit restaurant</h1>
+            <p class="lead">Update the details for {{ restaurant.name }}.</p>
+        </section>
+        <form action="{% url 'update_restaurant' restaurant.id %}" method="post">
+            {% csrf_token %}
+            <label for="name">Restaurant name</label>
+            <input id="name" type="text" name="name" value="{{ restaurant.name }}" required>
+            <label for="picture">Picture URL</label>
+            <input id="picture" type="url" name="picture" value="{{ restaurant.picture }}" required>
+            <label for="cuisine">Cuisine</label>
+            <input id="cuisine" type="text" name="cuisine" value="{{ restaurant.cuisine }}" required>
+            <label for="rating">Rating</label>
+            <input id="rating" type="number" name="rating" min="0" max="5" step="0.5" value="{{ restaurant.rating }}" required>
+            <button type="submit">Save changes</button>
+        </form>
+        <a href="{% url 'open_show_restaurant' %}">Cancel and return to restaurants</a>
+    </main>
+</body>
+</html>

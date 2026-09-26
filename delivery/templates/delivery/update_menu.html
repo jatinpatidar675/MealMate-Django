@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ restaurant.name }} menu management | Meal Mate</title>
+    {% include 'delivery/_theme_assets.html' %}
+</head>
+<body>
+    <header class="topbar">
+        {% include 'delivery/_brand_lockup.html' %}
+        <a href="{% url 'open_show_restaurant' %}">All restaurants</a>
+    </header>
+    <main>
+        <section class="page-heading">
+            <p class="eyebrow">Workspace / Menus</p>
+            <h1>{{ restaurant.name }}</h1>
+            <p class="lead">Review existing dishes or add something new.</p>
+        </section>
+        <section class="section-bar"><h2>Current menu</h2></section>
+        {% if itemList %}
+            <table>
+                <thead><tr><th>Item</th><th>Description</th><th>Price</th><th>Diet</th></tr></thead>
+                <tbody>
+                    {% for item in itemList %}
+                        <tr>
+                            <td><img src="{{ item.picture }}" alt="{{ item.name }}" loading="lazy"> {{ item.name }}</td>
+                            <td>{{ item.description }}</td>
+                            <td>₹{{ item.price }}</td>
+                            <td>{% if item.vegeterian %}<span class="veg-mark">Vegetarian</span>{% else %}Non-vegetarian{% endif %}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="empty-state">No menu items yet.</div>
+        {% endif %}
+        <section class="section-bar"><h2>Add vegetarian menu item</h2></section>
+        <p class="veg-mark">Only vegetarian items can be added to Meal Mate.</p>
+        <form action="{% url 'update_menu' restaurant.id %}" method="post">
+            {% csrf_token %}
+            <label for="name">Item name</label>
+            <input type="text" id="name" name="name" required>
+            <label for="description">Description</label>
+            <textarea id="description" name="description" required></textarea>
+            <label for="price">Price</label>
+            <input type="number" id="price" name="price" step="0.01" min="0" required>
+            <label for="picture">Image URL</label>
+            <input type="url" id="picture" name="picture">
+            <button type="submit">Add item</button>
+        </form>
+    </main>
+</body>
+</html>

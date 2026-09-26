@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurants | Meal Mate</title>
+    {% include 'delivery/_theme_assets.html' %}
+</head>
+<body>
+    <header class="topbar">
+        {% include 'delivery/_brand_lockup.html' %}
+        <nav class="topbar-links" aria-label="Main navigation">
+            <span>Hey, {{ username }}</span>
+            <a href="{% url 'order_history' username %}">My orders</a>
+            <a class="primary-link" href="{% url 'show_cart' username %}">Your cart</a>
+        </nav>
+    </header>
+    <main>
+        {% if messages %}
+            <div class="toast-stack" aria-live="polite">
+                {% for message in messages %}
+                    <div class="toast toast--{{ message.tags }}" role="status">
+                        <span>{{ message }}</span>
+                        <button class="toast__dismiss" type="button" aria-label="Dismiss notification">Dismiss</button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        <section class="page-heading">
+            <p class="eyebrow">Made nearby, enjoyed anywhere</p>
+            <h1>What sounds good?</h1>
+            <p class="lead">A few local favorites, ready when you are.</p>
+        </section>
+        {% if restaurantList %}
+            <section class="restaurant-grid" aria-label="Restaurants">
+                {% for r in restaurantList %}
+                    <article class="restaurant-card">
+                        <img class="restaurant-card__image" src="{{ r.picture }}" alt="{{ r.name }}" loading="lazy">
+                        <div class="restaurant-card__body">
+                            <div class="card-meta"><h3>{{ r.name }}</h3><span class="rating">★ {{ r.rating }}</span></div>
+                            <p>{{ r.cuisine }}</p>
+                            <a class="primary-link" href="{% url 'view_menu' r.id username %}">Explore menu</a>
+                        </div>
+                    </article>
+                {% endfor %}
+            </section>
+        {% else %}
+            <div class="empty-state">There are no restaurants listed just yet. Check back soon.</div>
+        {% endif %}
+    </main>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My orders | Meal Mate</title>
+    {% include 'delivery/_theme_assets.html' %}
+</head>
+<body>
+    <header class="topbar">
+        {% include 'delivery/_brand_lockup.html' %}
+        <nav class="topbar-links" aria-label="Main navigation">
+            <a href="{% url 'customer_home' username %}">Restaurants</a>
+            <a class="primary-link" href="{% url 'show_cart' username %}">Your cart</a>
+        </nav>
+    </header>
+    <main>
+        <section class="page-heading">
+            <p class="eyebrow">Your Meal Mate account</p>
+            <h1>My orders</h1>
+            <p class="lead">A read-only record of your past orders.</p>
+        </section>
+        {% if orders %}
+            <section class="order-list" aria-label="Order history">
+                {% for order in orders %}
+                    <article class="order-history-row">
+                        <div class="order-history-row__id">
+                            <span class="eyebrow">Order #{{ order.id }}</span>
+                            <strong>{{ order.created_at|date:'M j, Y · g:i A' }}</strong>
+                        </div>
+                        <div>
+                            <span class="order-status">{{ order.status }}</span>
+                            <p>{{ order.lines.count }} item{{ order.lines.count|pluralize }}</p>
+                        </div>
+                        <div class="order-history-row__total">
+                            <strong>₹{{ order.total_price }}</strong>
+                            <a href="{% url 'order_detail' username order.id %}">View order</a>
+                        </div>
+                    </article>
+                {% endfor %}
+            </section>
+        {% else %}
+            <div class="empty-state">
+                <h2>No orders yet</h2>
+                <p>Your completed orders will appear here.</p>
+                <a class="primary-link" href="{% url 'customer_home' username %}">Browse restaurants</a>
+            </div>
+        {% endif %}
+    </main>
+</body>
+</html>

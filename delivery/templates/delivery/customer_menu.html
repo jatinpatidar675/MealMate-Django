@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ restaurant.name }} Menu | Meal Mate</title>
+    {% include 'delivery/_theme_assets.html' %}
+</head>
+<body>
+    <header class="topbar">
+        {% include 'delivery/_brand_lockup.html' %}
+        <nav class="topbar-links" aria-label="Main navigation">
+            <span>Hey, {{ username }}</span>
+            <a class="primary-link" href="{% url 'show_cart' username %}">Your cart</a>
+        </nav>
+    </header>
+    <main>
+        <a href="{% url 'customer_home' username %}">← Restaurants</a>
+        <section class="page-heading page-heading--spaced">
+            <p class="eyebrow">{{ restaurant.cuisine }} · ★ {{ restaurant.rating }}</p>
+            <h1>{{ restaurant.name }}</h1>
+            <p class="lead">Fresh picks from the kitchen, made for your table.</p>
+        </section>
+        {% if itemList %}
+            <section class="menu-grid" aria-label="Menu items">
+                {% for item in itemList %}
+                    <article class="menu-card">
+                        <img class="menu-card__image" src="{{ item.picture }}" alt="{{ item.name }}" loading="lazy">
+                        <div class="menu-card__body">
+                            <div class="card-meta">
+                                <h3>{{ item.name }}</h3>
+                                {% if item.vegeterian %}<span class="veg-mark">Veg</span>{% endif %}
+                            </div>
+                            <p>{{ item.description }}</p>
+                            <div class="menu-card__footer">
+                                <span class="price">₹{{ item.price }}</span>
+                                <a class="primary-link" href="{% url 'add_to_cart' item.id username %}"><span class="button-icon" aria-hidden="true">+</span>Add to cart</a>
+                            </div>
+                        </div>
+                    </article>
+                {% endfor %}
+            </section>
+        {% else %}
+            <div class="empty-state">This menu is getting ready. Please check back soon.</div>
+        {% endif %}
+    </main>
+</body>
+</html>

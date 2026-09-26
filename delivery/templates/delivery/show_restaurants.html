@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage restaurants | Meal Mate</title>
+    {% include 'delivery/_theme_assets.html' %}
+</head>
+<body>
+    <header class="topbar">
+        {% include 'delivery/_brand_lockup.html' %}
+        <a href="{% url 'open_add_restaurant' %}">Add restaurant</a>
+    </header>
+    <main>
+        <section class="page-heading">
+            <p class="eyebrow">Workspace / Listings</p>
+            <h1>Restaurants</h1>
+            <p class="lead">Manage restaurant details and keep every menu fresh.</p>
+        </section>
+        {% if restaurantList %}
+            <table>
+                <thead><tr><th>Restaurant</th><th>Cuisine</th><th>Rating</th><th>Manage</th></tr></thead>
+                <tbody>
+                    {% for r in restaurantList %}
+                        <tr>
+                            <td><img src="{{ r.picture }}" alt="{{ r.name }}" loading="lazy"> {{ r.name }}</td>
+                            <td>{{ r.cuisine }}</td>
+                            <td><span class="rating">★ {{ r.rating }}</span></td>
+                            <td><div class="action-list">
+                                <a href="{% url 'open_update_restaurant' r.id %}">Edit details</a>
+                                <a href="{% url 'open_update_menu' r.id %}">Edit menu</a>
+                                <a href="{% url 'delete_restaurant' r.id %}">Delete</a>
+                            </div></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="empty-state">
+                <h2>No restaurants yet</h2>
+                <p>Add your first restaurant to start building the Meal Mate directory.</p>
+                <a class="primary-link" href="{% url 'open_add_restaurant' %}">Add a restaurant</a>
+            </div>
+        {% endif %}
+    </main>
+</body>
+</html>

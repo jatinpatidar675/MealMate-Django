@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant dashboard | Meal Mate</title>
+    {% include 'delivery/_theme_assets.html' %}
+</head>
+<body>
+    <header class="topbar">
+        {% include 'delivery/_brand_lockup.html' %}
+        <span>Restaurant management</span>
+    </header>
+    <main>
+        <section class="page-heading">
+            <p class="eyebrow">Workspace</p>
+            <h1>Good morning, admin.</h1>
+            <p class="lead">Keep your restaurant listings and menus up to date.</p>
+        </section>
+        <div class="action-list">
+            <a class="primary-link" href="{% url 'open_add_restaurant' %}">Add a restaurant</a>
+            <a href="{% url 'open_show_restaurant' %}">Manage restaurants</a>
+        </div>
+    </main>
+</body>
+</html>

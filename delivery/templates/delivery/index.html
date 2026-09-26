@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Meal Mate | Good food, good mood</title>
+        {% include 'delivery/_theme_assets.html' %}
+    </head>
+    <body>
+        <header class="topbar">
+            {% include 'delivery/_brand_lockup.html' %}
+            <nav class="topbar-links" aria-label="Account">
+                <a href="{% url 'open_signin' %}">Sign in</a>
+                <a class="primary-link" href="{% url 'open_signup' %}">Create account</a>
+            </nav>
+        </header>
+        <main>
+            <section class="hero">
+                <div class="hero-content">
+                    <p class="eyebrow">Your neighborhood, served</p>
+                    <h1>Good food.<br>Around the corner.</h1>
+                    <p>Find the spots you love and bring something delicious to your table.</p>
+                    <a class="primary-link" href="{% url 'open_signup' %}">Find your next favorite</a>
+                </div>
+            </section>
+            <section class="section-bar">
+                <div>
+                    <p class="eyebrow">A little something for every craving</p>
+                    <h2>Your next great meal starts here</h2>
+                </div>
+            </section>
+        </main>
+    </body>
+</html>

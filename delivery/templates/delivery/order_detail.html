@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order #{{ order.id }} | Meal Mate</title>
+    {% include 'delivery/_theme_assets.html' %}
+</head>
+<body>
+    <header class="topbar">
+        {% include 'delivery/_brand_lockup.html' %}
+        <a href="{% url 'order_history' username %}">My orders</a>
+    </header>
+    <main>
+        {% if messages %}
+            <div class="toast-stack" aria-live="polite">
+                {% for message in messages %}
+                    <div class="toast toast--{{ message.tags }}" role="status">
+                        <span>{{ message }}</span>
+                        <button class="toast__dismiss" type="button" aria-label="Dismiss notification">Dismiss</button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        <section class="page-heading">
+            <p class="eyebrow">Order #{{ order.id }} · {{ order.created_at|date:'M j, Y · g:i A' }}</p>
+            <h1>Order details</h1>
+            <p class="lead">This is a read-only receipt for your order.</p>
+        </section>
+        <div class="order-status-line">
+            <span class="order-status">{{ order.status }}</span>
+            <span>{{ order.payment_method|title }}</span>
+        </div>
+        <table class="order-detail-table">
+            <thead><tr><th>Item</th><th>Unit price</th><th>Qty</th><th>Subtotal</th></tr></thead>
+            <tbody>
+                {% for line in order.lines.all %}
+                    <tr>
+                        <td><img src="{{ line.item_picture }}" alt="{{ line.item_name }}" loading="lazy"> {{ line.item_name }}</td>
+                        <td>₹{{ line.unit_price }}</td>
+                        <td>{{ line.quantity }}</td>
+                        <td>₹{{ line.subtotal }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <section class="order-receipt-summary">
+            <div><span>Delivery address</span><strong>{{ order.delivery_address }}</strong></div>
+            <div><span>Payment method</span><strong>{{ order.payment_method|title }}</strong></div>
+            <div class="order-receipt-summary__total"><span>Total paid / due</span><strong>₹{{ order.total_price }}</strong></div>
+        </section>
+        <div class="action-list order-actions">
+            <a href="{% url 'order_history' username %}">All orders</a>
+            <a href="{% url 'customer_home' username %}">Browse restaurants</a>
+        </div>
+    </main>
+</body>
+</html>

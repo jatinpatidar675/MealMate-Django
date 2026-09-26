@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign in | Meal Mate</title>
+    {% include 'delivery/_theme_assets.html' %}
+</head>
+<body>
+    <main class="form-page">
+        {% include 'delivery/_brand_lockup.html' %}
+        <section class="page-heading">
+            <p class="eyebrow">Welcome back</p>
+            <h1>Sign in</h1>
+            <p class="lead">Your next favorite meal is just around the corner.</p>
+        </section>
+        <form action="{% url 'signin' %}" method="post">
+            {% csrf_token %}
+            <label for="username">Username</label>
+            <input id="username" type="text" name="username" autocomplete="username" required>
+            <label for="password">Password</label>
+            <input id="password" type="password" name="password" autocomplete="current-password" required>
+            <button type="submit">Sign in</button>
+        </form>
+        <a href="{% url 'open_signup' %}">New to Meal Mate? Create an account</a>
+    </main>
+</body>
+</html>

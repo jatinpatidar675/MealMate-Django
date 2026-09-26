@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">    
+    <title>Order confirmed | Meal Mate</title>
+    {% include 'delivery/_theme_assets.html' %}
+</head>
+<body>
+    <main class="form-page">
+        <div class="success-mark" aria-hidden="true">✓</div>
+        <p class="eyebrow">Order received</p>
+        <h1>Thanks, {{ username }}.</h1>
+        <p class="lead">Your order is on its way to the kitchen. We’ll bring it to:</p>
+        <section class="summary-panel">
+            <h3>Delivery address</h3>
+            <p>{{ customer.address }}</p>
+            {% if cart_lines %}
+                <h3>Items</h3>
+                {% for line in cart_lines %}
+                    <p>{{ line.item.name }} × {{ line.quantity }}</p>
+                {% endfor %}
+            {% endif %}
+            <h3><span>Order total</span><span>₹{{ total_price }}</span></h3>
+            <h3><span>Payment method</span><span>{{ payment_method }}</span></h3>
+        </section>
+        <p>Thanks for choosing Meal Mate. We hope it hits the spot.</p>
+        <a class="primary-link" href="{% url 'customer_home' username %}">Back to restaurants</a>
+    </main>
+</body>
+</html>

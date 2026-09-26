@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your cart | Meal Mate</title>
+    {% include 'delivery/_theme_assets.html' %}
+</head>
+<body>
+    <header class="topbar">
+        {% include 'delivery/_brand_lockup.html' %}
+        <a href="{% url 'customer_home' username %}">Keep browsing</a>
+    </header>
+    <main>
+        {% if messages %}
+            <div class="toast-stack" aria-live="polite">
+                {% for message in messages %}
+                    <div class="toast toast--{{ message.tags }}" role="status">
+                        <span>{{ message }}</span>
+                        <button class="toast__dismiss" type="button" aria-label="Dismiss notification">Dismiss</button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        <section class="page-heading">
+            <p class="eyebrow">Almost there</p>
+            <h1>Your cart</h1>
+            <p class="lead">Hi {{ username }}, here’s what you’ve picked.</p>
+        </section>
+        <section class="delivery-address-panel">
+            <div>
+                <p class="eyebrow">Delivery details</p>
+                <h2>Where should we bring it?</h2>
+                <p>Update your address for this and future orders.</p>
+            </div>
+            <form class="delivery-address-form" action="{% url 'save_delivery_address' username %}" method="post">
+                {% csrf_token %}
+                <label for="delivery-address">Delivery address</label>
+                <textarea id="delivery-address" name="address" maxlength="250" autocomplete="street-address" required>{{ customer.address }}</textarea>
+                <button type="submit">Save address</button>
+            </form>
+        </section>
+        {% if cart_lines %}
+            <table>
+                <thead><tr><th>Item</th><th>Description</th><th>Price</th><th>Quantity</th></tr></thead>
+                <tbody>
+                    {% for line in cart_lines %}
+                        <tr>
+                            <td><img src="{{ line.item.picture }}" alt="{{ line.item.name }}" loading="lazy"> {{ line.item.name }}</td>
+                            <td>{{ line.item.description }}</td>
+                            <td>₹{{ line.item.price }}</td>
+                            <td>
+                                <form class="quantity-controls" action="{% url 'adjust_cart_item' username line.item.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" name="action" value="decrease" aria-label="Decrease {{ line.item.name }} quantity">−</button>
+                                    <span aria-live="polite">{{ line.quantity }}</span>
+                                    <button type="submit" name="action" value="increase" aria-label="Increase {{ line.item.name }} quantity">+</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <section class="summary-panel">
+                <h2><span>Total</span><span>₹{{ total_price }}</span></h2>
+                <form action="{% url 'checkout' username %}" method="get">
+                    <button type="submit">Continue to checkout</button>
+                </form>
+            </section>
+        {% else %}
+            <div class="empty-state">
+                <h2>Your cart is taking a little break</h2>
+                <p>Add a dish from a local favorite and it’ll show up here. Your delivery address is saved above.</p>
+                <a class="primary-link" href="{% url 'customer_home' username %}">Browse restaurants</a>
+            </div>
+        {% endif %}
+    </main>
+</body>
+</html>

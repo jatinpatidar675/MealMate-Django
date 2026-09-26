@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout | Meal Mate</title>
+    {% include 'delivery/_theme_assets.html' %}
+    {% if payment_available %}
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    {% endif %}
+</head>
+<body>
+    <header class="topbar">{% include 'delivery/_brand_lockup.html' %}</header>
+    <main>
+        {% if messages %}
+            <div class="toast-stack" aria-live="polite">
+                {% for message in messages %}
+                    <div class="toast toast--{{ message.tags }}" role="status">
+                        <span>{{ message }}</span>
+                        <button class="toast__dismiss" type="button" aria-label="Dismiss notification">Dismiss</button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        <section class="page-heading">
+            <p class="eyebrow">Secure checkout</p>
+            <h1>One last step, {{ username }}</h1>
+            <p class="lead">Review your order before making it yours.</p>
+        </section>
+        {% if error %}
+            <p class="notice">{{ error }}</p>
+            <a href="{% url 'show_cart' username %}">Back to your cart</a>
+        {% else %}
+            <table>
+                <thead><tr><th>Item</th><th>Price</th></tr></thead>
+                <tbody>
+                    {% for line in cart_lines %}
+                        <tr><td>{{ line.item.name }} × {{ line.quantity }}</td><td>₹{{ line.item.price }}</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <section class="summary-panel">
+                <h3>Delivering to</h3>
+                <p>{{ customer.address }}</p>
+                <a href="{% url 'show_cart' username %}">Change address</a>
+            </section>
+            <section class="summary-panel">
+                <h2><span>Total</span><span>₹{{ total_price }}</span></h2>
+            </section>
+            <section class="payment-options" aria-labelledby="payment-heading">
+                <div class="payment-options__heading">
+                    <p class="eyebrow">Payment</p>
+                    <h2 id="payment-heading">Choose how to pay</h2>
+                </div>
+                <article class="payment-option">
+                    <div class="payment-option__icon" aria-hidden="true">↗</div>
+                    <div>
+                        <h3>Pay online</h3>
+                        <p>UPI, cards, and net banking with Razorpay.</p>
+                    </div>
+                    {% if payment_available %}
+                        <button class="payment-option__button" id="rzp-button" type="button">Pay ₹{{ total_price }} online</button>
+                    {% else %}
+                        <p class="payment-option__notice" role="status">{{ payment_notice }}</p>
+                    {% endif %}
+                </article>
+                <article class="payment-option">
+                    <div class="payment-option__icon payment-option__icon--cash" aria-hidden="true">₹</div>
+                    <div>
+                        <h3>Cash on delivery</h3>
+                        <p>Pay when your order reaches your door.</p>
+                    </div>
+                    <form class="cod-form" action="{% url 'orders' username %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="payment_method" value="cod">
+                        <button class="payment-option__button payment-option__button--secondary" type="submit">Place COD order</button>
+                    </form>
+                </article>
+                {% if payment_available %}
+                    <p class="notice payment-error" id="payment-error" role="alert" hidden></p>
+                    <form class="payment-confirmation" id="payment-confirmation" action="{% url 'orders' username %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="payment_method" value="razorpay">
+                        <input type="hidden" name="razorpay_order_id" id="razorpay-order-id">
+                        <input type="hidden" name="razorpay_payment_id" id="razorpay-payment-id">
+                        <input type="hidden" name="razorpay_signature" id="razorpay-signature">
+                    </form>
+                {% endif %}
+            </section>
+        {% endif %}
+    </main>
+
+    {% if payment_available and not error %}
+    <script>
+        var options = {
+            "key": "{{ razorpay_key_id|escapejs }}",
+            "amount": "{{ amount_paise }}",
+            "currency": "INR",
+            "name": "Meal Mate",
+            "description": "Order Payment",
+            "order_id": "{{ order_id|escapejs }}",
+            "handler": function (response) {
+                document.getElementById('razorpay-order-id').value = response.razorpay_order_id;
+                document.getElementById('razorpay-payment-id').value = response.razorpay_payment_id;
+                document.getElementById('razorpay-signature').value = response.razorpay_signature;
+                document.getElementById('payment-confirmation').submit();
+            },
+            "prefill": {
+                "name": "{{ username }}",
+                "email": "{{ customer.email|escapejs }}",
+                "contact": "{{ customer.mobile|escapejs }}"
+            },
+            "theme": {
+                "color": "#ed5a36"
+            }
+        };
+
+        var paymentButton = document.getElementById('rzp-button');
+        var paymentError = document.getElementById('payment-error');
+        if (typeof Razorpay === 'undefined') {
+            paymentButton.disabled = true;
+            paymentError.textContent = 'Razorpay could not load. You can still place a cash-on-delivery order.';
+            paymentError.hidden = false;
+        } else {
+            var razorpayCheckout = new Razorpay(options);
+            paymentButton.addEventListener('click', function () {
+                razorpayCheckout.open();
+            });
+            razorpayCheckout.on('payment.failed', function (response) {
+                paymentError.textContent = response.error.description || 'Payment failed. Your cart is unchanged; try again or choose cash on delivery.';
+                paymentError.hidden = false;
+            });
+        }
+    </script>
+    {% endif %}
+    
+</body>
+</html>
