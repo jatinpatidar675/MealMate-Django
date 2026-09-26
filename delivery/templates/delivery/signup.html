@@ -14,18 +14,19 @@
             <h1>Create your account</h1>
             <p class="lead">Save your details and get to the good part faster.</p>
         </section>
+        {% if error %}<p class="notice" role="alert">{{ error }}</p>{% endif %}
         <form action="{% url 'signup' %}" method="post">
             {% csrf_token %}
             <label for="username">Username</label>
-            <input id="username" type="text" name="username" autocomplete="username" required>
+            <input id="username" type="text" name="username" maxlength="20" autocomplete="username" required>
             <label for="password">Password</label>
             <input id="password" type="password" name="password" autocomplete="new-password" required>
             <label for="email">Email</label>
-            <input id="email" type="email" name="email" autocomplete="email" required>
+            <input id="email" type="email" name="email" maxlength="254" autocomplete="email" required>
             <label for="mobile">Mobile</label>
-            <input id="mobile" type="tel" name="mobile" autocomplete="tel" required>
+            <input id="mobile" type="tel" name="mobile" maxlength="32" autocomplete="tel" required>
             <label for="address">Delivery address</label>
-            <textarea id="address" name="address" autocomplete="street-address" required></textarea>
+            <textarea id="address" name="address" maxlength="250" autocomplete="street-address" required></textarea>
             <button type="submit">Create account</button>
         </form>
         <a href="{% url 'open_signin' %}">Already have an account? Sign in</a>

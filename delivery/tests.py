@@ -109,6 +109,34 @@ class AddToCartMessageTests(TestCase):
 		new_customer = Customer.objects.get(username='new_taster')
 		self.assertTrue(check_password('another-password', new_customer.password))
 
+	def test_signup_accepts_long_email_and_formatted_phone(self):
+		long_email = 'customer.name.with.details@example.com'
+		formatted_mobile = '+1 (415) 555-2671'
+		response = self.client.post(reverse('signup'), {
+			'username': 'long_contact',
+			'password': 'another-password',
+			'email': long_email,
+			'mobile': formatted_mobile,
+			'address': '8 New Street',
+		})
+
+		self.assertEqual(response.status_code, 200)
+		customer = Customer.objects.get(username='long_contact')
+		self.assertEqual(customer.email, long_email)
+		self.assertEqual(customer.mobile, formatted_mobile)
+
+	def test_signup_renders_validation_error_for_oversized_fields(self):
+		response = self.client.post(reverse('signup'), {
+			'username': 'too_long_' + 'x' * 20,
+			'password': 'another-password',
+			'email': 'valid@example.com',
+			'mobile': '1234567890',
+			'address': '8 New Street',
+		})
+
+		self.assertContains(response, 'One or more fields are too long')
+		self.assertFalse(Customer.objects.filter(username__startswith='too_long_').exists())
+
 	@override_settings(RAZORPAY_KEY_ID='', RAZORPAY_KEY_SECRET='')
 	def test_checkout_keeps_cod_available_without_razorpay_credentials(self):
 		self.client.get(reverse('add_to_cart', args=(self.item.pk, self.customer.username)))

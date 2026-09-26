@@ -4,8 +4,8 @@ from django.db import models
 class Customer(models.Model):
     username = models.CharField(max_length = 20)
     password = models.CharField(max_length = 128)
-    email = models.CharField(max_length = 20)
-    mobile = models.CharField(max_length = 10)
+    email = models.CharField(max_length = 254)
+    mobile = models.CharField(max_length = 32)
     address = models.CharField(max_length = 250)
 
 class Restaurant(models.Model):

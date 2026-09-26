@@ -22,14 +22,25 @@ def open_signin(request):
 
 def signup(request):
     if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        email = request.POST.get('email')
-        mobile = request.POST.get('mobile')
-        address = request.POST.get('address')
+        username = request.POST.get('username', '').strip()
+        password = request.POST.get('password', '')
+        email = request.POST.get('email', '').strip()
+        mobile = request.POST.get('mobile', '').strip()
+        address = request.POST.get('address', '').strip()
+
+        if not all((username, password, email, mobile, address)):
+            return render(request, 'delivery/signup.html', {
+                'error': 'Complete every field to create your account.',
+            })
+        if len(username) > 20 or len(email) > 254 or len(mobile) > 32 or len(address) > 250:
+            return render(request, 'delivery/signup.html', {
+                'error': 'One or more fields are too long. Check the limits and try again.',
+            })
 
         if Customer.objects.filter(username=username).exists():
-            return HttpResponse("Duplicate username!")
+            return render(request, 'delivery/signup.html', {
+                'error': 'That username is already taken. Choose another one.',
+            })
         Customer.objects.create(
             username=username,
             password=make_password(password),
