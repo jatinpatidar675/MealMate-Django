@@ -20,6 +20,10 @@ def open_signup(request):
 def open_signin(request):
     return render(request, 'delivery/signin.html')
 
+def logout(request):
+    request.session.flush()
+    return redirect('index')
+
 def signup(request):
     if request.method == 'POST':
         username = request.POST.get('username', '').strip()

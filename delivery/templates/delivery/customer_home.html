@@ -11,8 +11,9 @@
         {% include 'delivery/_brand_lockup.html' %}
         <nav class="topbar-links" aria-label="Main navigation">
             <span>Hey, {{ username }}</span>
-            <a href="{% url 'order_history' username %}">My orders</a>
-            <a class="primary-link" href="{% url 'show_cart' username %}">Your cart</a>
+            <a class="nav-action" href="{% url 'order_history' username %}">My orders</a>
+            <a class="nav-action" href="{% url 'show_cart' username %}">Your cart</a>
+            <a class="nav-action" href="{% url 'logout' %}">Logout</a>
         </nav>
     </header>
     <main>

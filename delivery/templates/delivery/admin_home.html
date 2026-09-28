@@ -9,7 +9,10 @@
 <body>
     <header class="topbar">
         {% include 'delivery/_brand_lockup.html' %}
-        <span>Restaurant management</span>
+        <nav class="topbar-links" aria-label="Admin navigation">
+            <span>Restaurant management</span>
+            <a class="logout-link" href="{% url 'logout' %}">Logout</a>
+        </nav>
     </header>
     <main>
         <section class="page-heading">
@@ -19,7 +22,7 @@
         </section>
         <div class="action-list">
             <a class="primary-link" href="{% url 'open_add_restaurant' %}">Add a restaurant</a>
-            <a href="{% url 'open_show_restaurant' %}">Manage restaurants</a>
+            <a class="primary-link" href="{% url 'open_show_restaurant' %}">Manage restaurants</a>
         </div>
     </main>
 </body>

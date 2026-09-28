@@ -37,6 +37,8 @@
                 {% csrf_token %}
                 <label for="delivery-address">Delivery address</label>
                 <textarea id="delivery-address" name="address" maxlength="250" autocomplete="street-address" required>{{ customer.address }}</textarea>
+                <button class="location-action" type="button" data-location-target="delivery-address">Use current location</button>
+                <p class="location-status" data-location-status="delivery-address" role="status" aria-live="polite"></p>
                 <button type="submit">Save address</button>
             </form>
         </section>

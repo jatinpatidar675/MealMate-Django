@@ -20,13 +20,21 @@
             <label for="username">Username</label>
             <input id="username" type="text" name="username" maxlength="20" autocomplete="username" required>
             <label for="password">Password</label>
-            <input id="password" type="password" name="password" autocomplete="new-password" required>
+            <div class="password-field">
+                <input id="password" type="password" name="password" autocomplete="new-password" required>
+                <button class="password-toggle" type="button" data-target="password" aria-label="Show password" aria-pressed="false">
+                    <svg class="password-toggle__icon password-toggle__icon--show" aria-hidden="true" viewBox="0 0 24 24" focusable="false"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"></path><circle cx="12" cy="12" r="2.5"></circle></svg>
+                    <svg class="password-toggle__icon password-toggle__icon--hide" aria-hidden="true" viewBox="0 0 24 24" focusable="false"><path d="m3 3 18 18M10.6 6.2A10.4 10.4 0 0 1 12 6c6 0 9.5 6 9.5 6a17 17 0 0 1-3.1 3.8M6.4 6.4C3.9 8.1 2.5 12 2.5 12s3.5 6 9.5 6c1.6 0 3-.4 4.2-1"></path><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"></path></svg>
+                </button>
+            </div>
             <label for="email">Email</label>
             <input id="email" type="email" name="email" maxlength="254" autocomplete="email" required>
             <label for="mobile">Mobile</label>
             <input id="mobile" type="tel" name="mobile" maxlength="32" autocomplete="tel" required>
             <label for="address">Delivery address</label>
             <textarea id="address" name="address" maxlength="250" autocomplete="street-address" required></textarea>
+            <button class="location-action" type="button" data-location-target="address">Use current location</button>
+            <p class="location-status" data-location-status="address" role="status" aria-live="polite"></p>
             <button type="submit">Create account</button>
         </form>
         <a href="{% url 'open_signin' %}">Already have an account? Sign in</a>
